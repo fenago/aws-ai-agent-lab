@@ -69,11 +69,26 @@ Follow these steps to create your free AWS account.
 7.  **Choose a Support Plan**: Select the "Basic Support - Free" plan.
 8.  **Complete Sign-up**: Once you complete the sign-up, your account will be activated. This can take a few minutes to a few hours. You will receive a confirmation email once your account is ready.
 
-### 1.3 Method 1: Launching an EC2 Instance via the AWS Management Console
+### 1.3 Understanding AWS Sign-In Methods: Root User vs. IAM User
+
+Once your account is created, it's important to understand the two different ways to sign in to the AWS Management Console.
+
+| Sign-In Method | Who Uses It | What You Need | When to Use |
+| :--- | :--- | :--- | :--- |
+| **Root User** | The account creator/owner | The email address and password you used to create the AWS account. | Initial account setup, billing tasks, and certain high-level security changes. **For this lab, you will always sign in as the Root User.** |
+| **IAM User** | Additional users created by the root user (e.g., team members, applications) | A unique Account ID (or alias), an IAM username, and a password. | Day-to-day development and operational tasks. This is the best practice for security, as it allows for granting limited permissions. |
+
+**For the purposes of this lab, you are the account owner, so you will always sign in as the Root User.**
+
+When you go to the [AWS Management Console sign-in page](https://console.aws.amazon.com/), you will see two options. Make sure to select **"Root user"** and use the email address you signed up with.
+
+---
+
+### 1.4 Method 1: Launching an EC2 Instance via the AWS Management Console
 
 The AWS Management Console is a web-based interface for managing your AWS services. This is the most straightforward way to launch your first virtual machine.
 
-1.  **Sign In**: Log in to the [AWS Management Console](https://aws.amazon.com/console/).
+1.  **Sign In as Root User**: Navigate to the [AWS Management Console sign-in page](https://console.aws.amazon.com/). Select **"Root user"**, enter the email address you used to create your account, and click "Next". Then enter your password.
 2.  **Navigate to EC2**: In the search bar at the top, type "EC2" and select "EC2" from the results.
 3.  **Launch Instance**: Click the orange "Launch instance" button.
 4.  **Name and Tags**: Give your instance a descriptive name, for example, `my-ai-agent-server`.
@@ -97,7 +112,7 @@ The AWS Management Console is a web-based interface for managing your AWS servic
 
 It will take a few minutes for your instance to launch. You can view its status in the EC2 Instances dashboard. Wait until the "Instance state" shows as "Running" and the "Status check" shows "2/2 checks passed".
 
-### 1.4 Method 1: Connecting to Your EC2 Instance via SSH (Local Terminal)
+### 1.5 Method 1: Connecting to Your EC2 Instance via SSH (Local Terminal)
 
 This method uses your local computer's terminal and the `.pem` key file you downloaded. It is a standard practice for developers.
 
@@ -116,7 +131,7 @@ This method uses your local computer's terminal and the `.pem` key file you down
 
 You are now connected to your EC2 instance! You should see a command prompt that looks like `ubuntu@ip-xxx-xxx-xxx-xxx:~$`.
 
-### 1.5 Method 2: Connecting via Browser (EC2 Instance Connect)
+### 1.6 Method 2: Connecting via Browser (EC2 Instance Connect)
 
 For a simpler approach that doesn't require a local terminal or managing `.pem` files, you can connect directly from your web browser.
 
@@ -128,11 +143,11 @@ For a simpler approach that doesn't require a local terminal or managing `.pem` 
 
 A new browser tab will open with a fully functional terminal session connected to your EC2 instance. This is the easiest way to get started.
 
-### 1.6 Method 3: Launching an EC2 Instance via the AWS CLI
+### 1.7 Method 3: Launching an EC2 Instance via the AWS CLI
 
 For automation, scripting, and advanced workflows, the AWS Command Line Interface (CLI) is essential. First, you need to install and configure it on your local machine.
 
-#### 1.6.1 Installing and Configuring the AWS CLI
+#### 1.7.1 Installing and Configuring the AWS CLI
 
 1.  **Install the AWS CLI**: Follow the official instructions for your operating system: [Installing the AWS CLI](https://docs.aws.amazon.com/cli/latest/userguide/cli-chap-install.html). For most systems, you can use a package manager or download an installer.
 
@@ -158,7 +173,7 @@ For automation, scripting, and advanced workflows, the AWS Command Line Interfac
     *   **Default region name**: Enter your desired AWS region (e.g., `us-east-1`). Choose a region geographically close to you for lower latency.
     *   **Default output format**: Enter `json`.
 
-#### 1.6.2 Launching an EC2 Instance with the CLI
+#### 1.7.2 Launching an EC2 Instance with the CLI
 
 Now you are ready to launch an instance via the CLI. The process requires you to find the AMI ID and create a Security Group first.
 
