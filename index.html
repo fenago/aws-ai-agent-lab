@@ -1,0 +1,367 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AWS AI Agent Lab Guide</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/reveal.js@4.5.0/dist/reset.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/reveal.js@4.5.0/dist/reveal.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/reveal.js@4.5.0/dist/theme/black.css">
+    <style>
+        .reveal h1, .reveal h2, .reveal h3 {
+            text-transform: none;
+        }
+        .reveal .slides {
+            text-align: left;
+        }
+        .reveal table {
+            font-size: 0.7em;
+        }
+        .reveal .slide-number {
+            font-size: 0.8em;
+        }
+        .highlight {
+            color: #42affa;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+    <div class="reveal">
+        <div class="slides">
+            
+            <!-- Slide 1: Title -->
+            <section>
+                <h1>Building an AWS AI Agent Foundation</h1>
+                <h3>Free Tier Services Lab Guide</h3>
+                <p>
+                    <small>Dr. Ernesto Lee<br>
+                    CEO, LVNG.ai | DrLee.ai</small>
+                </p>
+            </section>
+
+            <!-- Slide 2: What You'll Build -->
+            <section>
+                <h2>What You'll Build Today</h2>
+                <p>By the end of this lab, you will have:</p>
+                <ul>
+                    <li>A fully configured AWS Free Tier account</li>
+                    <li>Running EC2 virtual machines (multiple methods)</li>
+                    <li>Docker containers deployed and accessible</li>
+                    <li>A serverless MCP server connecting AI to AWS</li>
+                    <li>An AI agent that can manage your cloud infrastructure</li>
+                </ul>
+                <p class="highlight">All within the free tier limits!</p>
+            </section>
+
+            <!-- Slide 3: Understanding Free Tier -->
+            <section>
+                <h2>AWS Free Tier: Two Types</h2>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Type</th>
+                            <th>Duration</th>
+                            <th>Key Services</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><span class="highlight">12-Month Free</span></td>
+                            <td>Expires after 1 year</td>
+                            <td>EC2 (750 hrs), S3, RDS</td>
+                        </tr>
+                        <tr>
+                            <td><span class="highlight">Always Free</span></td>
+                            <td>Never expires</td>
+                            <td>Lambda (1M requests), DynamoDB, SNS</td>
+                        </tr>
+                    </tbody>
+                </table>
+                <p style="margin-top: 30px;"><strong>Critical:</strong> Monitor your usage to avoid unexpected charges!</p>
+            </section>
+
+            <!-- Slide 4: Sign-In Methods -->
+            <section>
+                <h2>Root User vs. IAM User</h2>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Method</th>
+                            <th>Who Uses It</th>
+                            <th>When to Use</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><span class="highlight">Root User</span></td>
+                            <td>Account owner</td>
+                            <td>Initial setup, billing, this lab</td>
+                        </tr>
+                        <tr>
+                            <td>IAM User</td>
+                            <td>Team members</td>
+                            <td>Day-to-day operations</td>
+                        </tr>
+                    </tbody>
+                </table>
+                <p style="margin-top: 30px;"><strong>For this lab:</strong> Always sign in as <span class="highlight">Root User</span></p>
+            </section>
+
+            <!-- Slide 5: Three Ways to Launch EC2 -->
+            <section>
+                <h2>Three Paths to Your Virtual Machine</h2>
+                <ol>
+                    <li><span class="highlight">AWS Console</span> - Visual, beginner-friendly</li>
+                    <li><span class="highlight">Browser SSH (EC2 Instance Connect)</span> - No local tools needed</li>
+                    <li><span class="highlight">AWS CLI</span> - Automation and scripting</li>
+                </ol>
+                <p style="margin-top: 30px;">We'll walk through all three methods so you understand the full spectrum of options.</p>
+            </section>
+
+            <!-- Slide 6: EC2 Console Launch -->
+            <section>
+                <h2>Method 1: Console Launch</h2>
+                <p><strong>Key Decisions:</strong></p>
+                <ul>
+                    <li>AMI: <span class="highlight">Ubuntu 22.04 LTS</span> (Free Tier eligible)</li>
+                    <li>Instance Type: <span class="highlight">t2.micro</span> (1 vCPU, 1 GB RAM)</li>
+                    <li>Key Pair: Create and download <code>.pem</code> file</li>
+                    <li>Security Group: Allow SSH from <span class="highlight">My IP</span> only</li>
+                </ul>
+                <p style="margin-top: 20px;"><strong>Security First:</strong> Never expose SSH to 0.0.0.0/0 in production!</p>
+            </section>
+
+            <!-- Slide 7: Browser-Based Connection -->
+            <section>
+                <h2>Easiest Connection: EC2 Instance Connect</h2>
+                <p><strong>No terminal? No problem!</strong></p>
+                <ol>
+                    <li>Select your instance in the EC2 dashboard</li>
+                    <li>Click "Connect"</li>
+                    <li>Choose "EC2 Instance Connect"</li>
+                    <li>Click "Connect" again</li>
+                </ol>
+                <p style="margin-top: 30px;" class="highlight">A terminal opens directly in your browser!</p>
+            </section>
+
+            <!-- Slide 8: Docker Introduction -->
+            <section>
+                <h2>Why Docker?</h2>
+                <p><strong>Containers solve the "works on my machine" problem</strong></p>
+                <ul>
+                    <li>Package application + dependencies together</li>
+                    <li>Run anywhere: laptop, server, cloud</li>
+                    <li>Lightweight compared to virtual machines</li>
+                    <li>Industry standard for deployment</li>
+                </ul>
+                <p style="margin-top: 30px;">We'll build a custom container AND pull one from Docker Hub.</p>
+            </section>
+
+            <!-- Slide 9: Docker Hub Highlight -->
+            <section>
+                <h2>Docker Hub: The App Store for Containers</h2>
+                <p><strong>Millions of pre-built containers ready to deploy</strong></p>
+                <div style="background: #1a1a1a; padding: 20px; border-radius: 5px; margin-top: 20px;">
+                    <code style="color: #42affa;">docker pull 1panel/openclaw</code><br>
+                    <code style="color: #42affa;">docker run -d -p 3000:80 1panel/openclaw</code>
+                </div>
+                <p style="margin-top: 30px;"><span class="highlight">OpenClaw</span> - A complete AI assistant running in seconds!</p>
+            </section>
+
+            <!-- Slide 10: Security Groups -->
+            <section>
+                <h2>AWS Security Groups = Cloud Firewall</h2>
+                <p><strong>Control what traffic reaches your instances</strong></p>
+                <table style="margin-top: 20px;">
+                    <thead>
+                        <tr>
+                            <th>Port</th>
+                            <th>Service</th>
+                            <th>Source</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>22</td>
+                            <td>SSH</td>
+                            <td>My IP only</td>
+                        </tr>
+                        <tr>
+                            <td>80</td>
+                            <td>HTTP</td>
+                            <td>Anywhere (0.0.0.0/0)</td>
+                        </tr>
+                        <tr>
+                            <td>3000</td>
+                            <td>OpenClaw</td>
+                            <td>Anywhere (0.0.0.0/0)</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </section>
+
+            <!-- Slide 11: What is MCP? -->
+            <section>
+                <h2>Model Context Protocol (MCP)</h2>
+                <p><strong>The missing link between AI and your infrastructure</strong></p>
+                <ul>
+                    <li>Open standard for LLM-tool integration</li>
+                    <li>AI agents <span class="highlight">discover</span> available tools</li>
+                    <li>AI agents <span class="highlight">understand</span> tool capabilities</li>
+                    <li>AI agents <span class="highlight">execute</span> tools securely</li>
+                </ul>
+                <p style="margin-top: 30px;">Think of it as an API gateway designed specifically for AI agents.</p>
+            </section>
+
+            <!-- Slide 12: MCP Architecture -->
+            <section>
+                <h2>Serverless MCP on AWS</h2>
+                <p><strong>Lambda + API Gateway = Cost-Effective AI Bridge</strong></p>
+                <ul>
+                    <li><span class="highlight">AWS Lambda:</span> Runs your tool code on-demand</li>
+                    <li><span class="highlight">API Gateway:</span> Exposes tools via HTTPS</li>
+                    <li><span class="highlight">IAM Roles:</span> Secure access to AWS services</li>
+                </ul>
+                <p style="margin-top: 30px;"><strong>Cost:</strong> 1 million Lambda requests/month = Always Free!</p>
+            </section>
+
+            <!-- Slide 13: Building Your First Tool -->
+            <section>
+                <h2>Your First AWS Tool: List EC2 Instances</h2>
+                <div style="background: #1a1a1a; padding: 15px; border-radius: 5px; font-size: 0.7em;">
+                    <code style="color: #42affa;">@tool</code><br>
+                    <code>def list_ec2_instances(region: str) -> str:</code><br>
+                    <code>&nbsp;&nbsp;&nbsp;&nbsp;ec2 = boto3.client("ec2", region_name=region)</code><br>
+                    <code>&nbsp;&nbsp;&nbsp;&nbsp;instances = ec2.describe_instances()</code><br>
+                    <code>&nbsp;&nbsp;&nbsp;&nbsp;return format_instance_list(instances)</code>
+                </div>
+                <p style="margin-top: 20px;">Add IAM permissions → Deploy → Your AI agent can now list your VMs!</p>
+            </section>
+
+            <!-- Slide 14: Connecting Claude Code -->
+            <section>
+                <h2>Connecting Your AI Agent</h2>
+                <p><strong>Claude Code + Your MCP Server</strong></p>
+                <ol>
+                    <li>Deploy your MCP server (SAM CLI)</li>
+                    <li>Copy the API Gateway endpoint URL</li>
+                    <li>Add the server in Claude Code settings</li>
+                    <li>Test: "List my EC2 instances in us-east-1"</li>
+                </ol>
+                <p style="margin-top: 30px;" class="highlight">Your AI agent is now cloud-native!</p>
+            </section>
+
+            <!-- Slide 15: What You Can Build Next -->
+            <section>
+                <h2>Extending Your AI Agent</h2>
+                <p><strong>Add more tools to expand capabilities:</strong></p>
+                <ul>
+                    <li>Start/stop EC2 instances</li>
+                    <li>Manage S3 buckets and files</li>
+                    <li>Query CloudWatch metrics and logs</li>
+                    <li>Deploy Lambda functions</li>
+                    <li>Monitor costs and billing</li>
+                </ul>
+                <p style="margin-top: 30px;">Each tool = 3 steps: Code → Permissions → Deploy</p>
+            </section>
+
+            <!-- Slide 16: Best Practices -->
+            <section>
+                <h2>Production Best Practices</h2>
+                <ul>
+                    <li><span class="highlight">Never use root user for daily work</span> - Create IAM users</li>
+                    <li><span class="highlight">Enable MFA</span> - Protect your account</li>
+                    <li><span class="highlight">Use least-privilege IAM policies</span> - Grant minimum permissions</li>
+                    <li><span class="highlight">Tag everything</span> - Track costs and resources</li>
+                    <li><span class="highlight">Set billing alerts</span> - Avoid surprise charges</li>
+                </ul>
+            </section>
+
+            <!-- Slide 17: Cost Management -->
+            <section>
+                <h2>Staying Within Free Tier</h2>
+                <p><strong>Monitor these metrics:</strong></p>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Service</th>
+                            <th>Free Limit</th>
+                            <th>How to Monitor</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>EC2</td>
+                            <td>750 hrs/month</td>
+                            <td>AWS Billing Dashboard</td>
+                        </tr>
+                        <tr>
+                            <td>Lambda</td>
+                            <td>1M requests</td>
+                            <td>CloudWatch Metrics</td>
+                        </tr>
+                        <tr>
+                            <td>Data Transfer</td>
+                            <td>100 GB out</td>
+                            <td>Cost Explorer</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </section>
+
+            <!-- Slide 18: Troubleshooting -->
+            <section>
+                <h2>Common Issues & Solutions</h2>
+                <ul>
+                    <li><strong>Can't SSH:</strong> Check security group, verify key permissions (chmod 400)</li>
+                    <li><strong>Docker permission denied:</strong> Add user to docker group, log out/in</li>
+                    <li><strong>Container not accessible:</strong> Check security group ports</li>
+                    <li><strong>MCP server errors:</strong> Verify IAM permissions, check Lambda logs</li>
+                </ul>
+                <p style="margin-top: 30px;"><span class="highlight">CloudWatch Logs</span> are your best friend for debugging!</p>
+            </section>
+
+            <!-- Slide 19: Resources -->
+            <section>
+                <h2>Resources & Next Steps</h2>
+                <ul>
+                    <li><strong>Lab Guide:</strong> <a href="https://github.com/fenago/aws-ai-agent-lab">github.com/fenago/aws-ai-agent-lab</a></li>
+                    <li><strong>AWS Documentation:</strong> docs.aws.amazon.com</li>
+                    <li><strong>MCP Specification:</strong> modelcontextprotocol.io</li>
+                    <li><strong>Docker Hub:</strong> hub.docker.com</li>
+                    <li><strong>AWS Free Tier:</strong> aws.amazon.com/free</li>
+                </ul>
+            </section>
+
+            <!-- Slide 20: Thank You -->
+            <section>
+                <h1>Thank You!</h1>
+                <h3>Questions?</h3>
+                <p style="margin-top: 50px;">
+                    <strong>Dr. Ernesto Lee</strong><br>
+                    CEO, LVNG.ai | DrLee.ai
+                </p>
+                <p style="margin-top: 30px;">
+                    <small>Lab Guide: <a href="https://github.com/fenago/aws-ai-agent-lab">github.com/fenago/aws-ai-agent-lab</a></small>
+                </p>
+            </section>
+
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/reveal.js@4.5.0/dist/reveal.js"></script>
+    <script>
+        Reveal.initialize({
+            hash: true,
+            slideNumber: true,
+            transition: 'slide',
+            width: 1280,
+            height: 720,
+            margin: 0.1,
+            minScale: 0.2,
+            maxScale: 2.0
+        });
+    </script>
+</body>
+</html>
